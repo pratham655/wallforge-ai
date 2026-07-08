@@ -32,23 +32,16 @@ export default function Footer() {
           href="https://github.com/pratham655"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+          className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
         >
-          <a
-  href="https://github.com/pratham655"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
->
-  GitHub
-</a>
           GitHub
         </a>
+
       </div>
 
       <div className="border-t border-white/10 py-5 text-center text-sm text-gray-500">
-        Made with <Heart className="mx-1 inline h-4 w-4 text-red-500" /> by
-        Pratham
+        Made with <Heart className="mx-1 inline h-4 w-4 text-red-500" />
+        by Pratham
       </div>
     </footer>
   );
