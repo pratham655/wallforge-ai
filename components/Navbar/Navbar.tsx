@@ -1,13 +1,81 @@
+"use client";
+
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+
 export default function Navbar() {
   return (
-    <nav className="w-full h-16 border-b border-gray-200 flex items-center justify-between px-8">
-      <h1 className="text-2xl font-bold">
-        🎨 WallForge AI
-      </h1>
+    <motion.header
+      initial={{ y: -80 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="fixed inset-x-0 top-0 z-50"
+    >
+      <div className="mx-auto mt-5 flex max-w-7xl items-center justify-between rounded-2xl border border-white/10 bg-black/30 px-6 py-4 backdrop-blur-2xl shadow-2xl">
 
-      <button className="bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition">
-        Login
-      </button>
-    </nav>
+        {/* Logo */}
+
+        <div className="flex items-center gap-3">
+
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-500 shadow-lg shadow-violet-500/30">
+
+            <Sparkles className="h-6 w-6 text-white" />
+
+          </div>
+
+          <div>
+
+            <h1 className="text-xl font-black text-white">
+              WallForge AI
+            </h1>
+
+            <p className="text-xs text-gray-400">
+              Powered by Gemini + Cloudflare
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* Navigation */}
+
+        <nav className="hidden items-center gap-8 md:flex">
+
+          <a
+            href="#history"
+            className="text-gray-300 transition hover:text-white"
+          >
+            History
+          </a>
+
+          <a
+            href="#generator"
+            className="text-gray-300 transition hover:text-white"
+          >
+            Generator
+          </a>
+
+        </nav>
+
+        {/* GitHub */}
+
+        <a
+          href="https://github.com/pratham655"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-xl border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+        >
+          <a
+  href="https://github.com/pratham655"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
+>
+  GitHub
+</a>
+        </a>
+
+      </div>
+    </motion.header>
   );
 }
