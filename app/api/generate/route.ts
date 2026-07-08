@@ -2,13 +2,40 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID!;
-const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN!;
+const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+const API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 
 const MODEL = "@cf/black-forest-labs/flux-1-schnell";
 
 export async function POST(req: NextRequest) {
+  console.log("========== WALLFORGE DEBUG ==========");
+  console.log("ACCOUNT_ID:", ACCOUNT_ID);
+  console.log("TOKEN EXISTS:", !!API_TOKEN);
+  console.log("MODEL:", MODEL);
+
   try {
+    if (!ACCOUNT_ID) {
+      return NextResponse.json(
+        {
+          error: "Missing CLOUDFLARE_ACCOUNT_ID",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    if (!API_TOKEN) {
+      return NextResponse.json(
+        {
+          error: "Missing CLOUDFLARE_API_TOKEN",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
     const body = await req.json();
 
     const {
@@ -28,27 +55,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/ai/run/${MODEL}`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${API_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt,
-          width,
-          height,
-          steps: 4,
-          seed: Math.floor(Math.random() * 1000000),
-        }),
-      }
-    );
+    const url = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}/ai/run/${MODEL}`;
+
+    console.log("REQUEST URL:", url);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt,
+        width,
+        height,
+        steps: 4,
+        seed: Math.floor(Math.random() * 1000000),
+      }),
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
 
+      console.error("STATUS:", response.status);
+      console.error("ACCOUNT_ID USED:", ACCOUNT_ID);
       console.error("Cloudflare Error:", errorText);
 
       return NextResponse.json(
@@ -63,7 +93,8 @@ export async function POST(req: NextRequest) {
 
     const contentType = response.headers.get("content-type") ?? "";
 
-    // Binary image response
+    console.log("CONTENT TYPE:", contentType);
+
     if (contentType.startsWith("image/")) {
       const image = await response.arrayBuffer();
 
@@ -75,10 +106,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // JSON response (base64 image)
     const result = await response.json();
 
-    console.log(result);
+    console.log("SUCCESS RESPONSE:", result);
 
     if (!result.success) {
       return NextResponse.json(result, {
@@ -110,7 +140,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error(error);
+    console.error("SERVER ERROR:", error);
 
     return NextResponse.json(
       {
